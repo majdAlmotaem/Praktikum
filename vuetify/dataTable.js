@@ -1,11 +1,13 @@
 new Vue({
     el: '#app',
     data: {
+      expanded: [],
       valid: true,
       dialog: false,
       deleteDialog: false,
       headers: [
-        { text: 'First Name',align: 'left',value: 'firstname'},
+        { text: '', align:'start', sortable: false },
+        { text: 'First Name',value: 'firstname' },
         { text: 'Last Name', value: 'lastname' },
         { text: 'E-mail', value: 'email' },
         { text: 'Age', value: 'age' },
@@ -30,6 +32,14 @@ new Vue({
         text: "",
         onConfirm: () => {},
       },
+      /* Footer Icons */
+      icons: [
+        'mdi-home',
+        'mdi-email',
+        'mdi-facebook',
+        'mdi-instagram',
+      ],
+      item: null,
     },
     computed: {
       formTitle() {
@@ -49,6 +59,14 @@ new Vue({
     },
 
     methods: {
+      toggleExpanded(item) {
+        if (this.expanded.includes(item)) {
+          const index = this.expanded.indexOf(item);
+          this.expanded.splice(index, 1);
+        } else {
+          this.expanded.push(item);
+        }
+      },      
       /* initialize infos */
       initialize() {
         this.infos = [ 
@@ -70,20 +88,8 @@ new Vue({
             email: 'alexmix@gmail.com',
             age: 55,
           },
-          {
-            firstname: 'xxx',
-            lastname: 'Mix',
-            email: 'yyyyy@gmail.com',
-            age: 22,
-          },
-          {
-            firstname: 'yyy',
-            lastname: 'Mix',
-            email: 'xxxxx@gmail.com',
-            age: 34,
-          },
         ]
-      },
+        },
         /* Save Button */
         saveData() {
           this.$refs.form.validate();
@@ -123,6 +129,6 @@ new Vue({
             this.editedIndex = -1
           })
         },
-    },
+      },
 });
   
