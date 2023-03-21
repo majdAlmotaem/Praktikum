@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Stylesheet Vuetify css -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@1.x/dist/vuetify.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">  
+    <title>Table</title>
+</head>
+<body>
+
+
+    <!-- toolbar -->
+    <div id="app">
+        <v-app>
+            <v-toolbar >
+                
+                <!-- Title -->
+                <v-toolbar-title class=" blue--text text--darken-3">Majd Almotaem</v-toolbar-title>
+                
+                <!-- Search field -->
+                <v-text-field
+                Filled
+                size="20"
+                hide-details
+                label=""
+                placeholder="Search"
+                append-icon="mdi-magnify" class="shrink mx-5">
+                </v-text-field>
+                <v-spacer></v-spacer>
+                
+                <!-- buttons toolbar -->
+                <v-btn round class="ml-1 blue white--text">Home</v-btn>
+                <v-btn round class="ml-1 blue white--text">Services</v-btn>
+                <v-btn round class="ml-1 blue white--text">About us</v-btn>
+                <v-btn round class="ml-1 blue white--text">Contact</v-btn>
+            </v-toolbar>
+
+            <br><br>
+
+            <!-- Title -->
+            <h1 class="text-md-center primary--text">Customer Details</h1>
+
+            <!-- Table -->
+            <v-container fluid>
+                <v-data-table dark
+                    :headers="headers"
+                    :items="infos"
+                    class="elevation-1"
+                    >
+                    
+                    <template slot="items" slot-scope="props">
+                        <td>{{ props.item.firstname }}</td>
+                        <td>{{ props.item.lastname }}</td>
+                        <td>{{ props.item.email }}</td>
+                        <td>{{ props.item.age }}</td>
+
+                        <!-- Edit&Delete Buttons -->
+                        <td class="justify-center layout px-0">
+                            <v-btn icon class="mx-0" @click="editItem(props.item)">
+                                <v-icon color="teal">edit</v-icon>
+                            </v-btn>
+                            <v-btn icon class="mx-0" @click="deleteItem(props.item)">
+                                <v-icon color="pink">delete</v-icon>
+                            </v-btn>
+                        </td>
+                    </template>
+                    <template v-slot:no-data>
+                        <v-btn
+                            round
+                            color="primary"
+                            @click="initialize"
+                        >
+                          Reset
+                        </v-btn>
+                      </template>
+                </v-data-table>
+
+                <!-- Delete Dialog -->
+                <v-dialog ref="deleteDialog" v-model="dialogRef.open" max-width="600px">
+                    <v-card>
+                      <v-card-title class="headline">{{ dialogRef.title }}</v-card-title>
+                      <v-card-text>{{ dialogRef.text }}</v-card-text>
+
+                      <!-- Delete Dialog Buttons -->
+                      <v-card-actions>
+                        <v-btn color="primary" dark @click="dialogRef.open = false">Cancel</v-btn>
+                        <v-btn color="red" dark @click="dialogRef.onConfirm()">Delete</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                
+
+                <!-- Dialog -->
+                <v-layout row justify-center>
+                    <v-dialog v-model="dialog" persistent max-width="600px">
+                        
+                        <!-- Add User button -->
+                        <template v-slot:activator="{ on }">
+                            <v-btn color="primary" dark v-on="on" fab class="mx-2"><v-icon dark>
+                                mdi-plus
+                              </v-icon></v-btn>
+                        </template>
+                        
+                        <!-- Form Title -->
+                        <v-card>
+                            <v-card-title>
+                                <span class="headline">{{ formTitle }}</span>
+                            </v-card-title>
+                            <v-card-text>
+                                <v-container grid-list-md>
+                                    <v-form ref="form" v-model="valid">
+                                        <v-layout wrap>
+                                        
+                                            <!-- First Name -->
+                                            <v-flex xs12 sm6 md4>
+                                            <v-text-field label="First Name*" required v-model="editedItem.firstname" 
+                                            :rules="[v => !!v || 'field is required']"></v-text-field>
+                                            </v-flex>
+                                            
+                                            <!-- Last Name -->
+                                            <v-flex xs12 sm6 md4>
+                                            <v-text-field label="Last Name*" required v-model="editedItem.lastname" 
+                                            :rules="[v => !!v || 'field is required']"></v-text-field>
+                                            </v-flex>
+                                            
+                                            <!-- Email -->
+                                            <v-flex xs12>
+                                                <v-text-field label="Email*" required="" v-model="editedItem.email" :rules="[
+                                                    v => !!v || 'E-mail is required',
+                                                    v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+                                                    ]">                                
+                                                </v-text-field>
+                                            </v-flex>
+                                            
+                                            <!-- Age -->
+                                            <v-flex xs12 sm6>
+                                                <v-select 
+                                                    :items="['0-17', '18-29', '30-54', '54+']" 
+                                                    label="Age*" required v-model="editedItem.age" 
+                                                    :rules="[v => !!v || 'field is required']">
+                                                </v-select>
+                                            </v-flex>
+                                            
+                                        </v-layout>
+                                    </v-form>
+                                </v-container>
+                                <small>*indicates required field</small>
+                            </v-card-text>
+                            <v-spacer></v-spacer>
+                        
+                            <!-- Close & Save buttons -->
+                            <v-card-actions>
+                                <v-btn color="blue darken-1" flat @click="close">Close</v-btn>
+                                <v-btn color="blue darken-1" flat @click="saveData" >Save</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </v-layout>
+            </v-container>
+        </v-app>
+    </div>
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@1.x/dist/vuetify.js"></script>
+    <script src="/dataTable.js"></script>
+
+    
+
+</body>
+</html>

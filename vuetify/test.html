@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@1.x/dist/vuetify.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">  
+    <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <v-app id="inspire">
+        <v-card>
+            <v-data-table 
+            :headers="headers" 
+            :items="desserts" 
+            item-key="name" 
+            class="elevation-1">
+                <template v-slot:body="{ items, headers }">
+                    <tbody>
+                        <tr v-for="(item,idx,k) in items" :key="idx">
+                            <td v-for="(header,key) in headers" :key="key">
+                                <v-edit-dialog
+                                  :return-value.sync="item[header.value]"
+                                  @save="save"
+                                  @cancel="cancel"
+                                  @open="open"
+                                  @close="close"
+                                  large
+                                > {{item[header.value]}}
+                                  <template v-slot:input>
+                                    <v-text-field
+                                      v-model="item[header.value]"
+                                      label="Edit"
+                                      single-line
+                                    ></v-text-field>
+                                  </template>
+                                </v-edit-dialog>
+                            </td>
+                        </tr>
+                    </tbody>
+                </template>
+            </v-data-table>
+        </v-card>
+    </v-app>
+  </div>
+      
+    
+
+
+
+    
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@1.x/dist/vuetify.js"></script>
+  <script src="/test.js"></script>
+  
+</body>
+</html>
