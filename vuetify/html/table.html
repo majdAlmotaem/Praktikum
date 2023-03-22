@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Stylesheet Vuetify css -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@1.x/dist/vuetify.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/vuetify/css/table.css">  
+    <title>Costumers</title>
+</head>
+<body >
+
+
+    <!-- toolbar -->
+    <div id="app" >
+        <v-app>
+            <v-toolbar elevation="24" class="blue-grey darken-1" >
+                
+                <!-- Title -->
+                <v-toolbar-title class=" white--text">Majd Almotaem</v-toolbar-title>
+                
+             
+                <v-spacer></v-spacer>
+                
+                <!-- buttons toolbar -->
+                <v-btn round class="ml-1 white">
+                    <a href="/vuetify/html/homepage.html" style="text-decoration: none;"
+                    class="black--text">Home</a>
+                </v-btn>
+                <v-btn round class="ml-1 white">
+                    <a href="/vuetify/html/services.html" style="text-decoration: none;"
+                  class="black--text">Services</a>
+                </v-btn>
+                <v-btn round class="ml-1 white">
+                    <a href="/vuetify/html/table.html" style="text-decoration: none;"
+                    class="black--text">Costomers</a>
+                </v-btn>
+                <v-btn round class="ml-1 white">
+                    <a href="/vuetify/html/contact.html" style="text-decoration: none;"
+                    class="black--text">Contact</a>
+                </v-btn>
+            </v-toolbar>
+
+            <v-container fluid class="grey lighten-2">
+                <br>
+                <!-- Title -->
+                <h1 class="text-md-center black--text ">Customer Details</h1>
+                <br>
+                
+            <!-- Table -->
+                <v-data-table dark
+                    :headers="headers"
+                    :items="infos"
+                    :expanded.sync="expanded"
+                    show-expand
+                    item-key="firstname"
+                    class="elevation-1"
+                    >
+
+
+                    <template slot="items" slot-scope="props">
+                        <tr @click="toggleExpanded(props.item)">
+                          <td><v-icon dark>mdi-account-circle</v-icon></td>
+                          <td>{{ props.item.firstname }}</td>
+                          <td>{{ props.item.lastname }}</td>
+                          <td>{{ props.item.email }}</td>
+                          <td>{{ props.item.age }}</td>
+                      
+                          <!-- Edit&Delete Buttons -->
+                          <td class="justify-center layout px-0">
+                            <v-btn icon class="mx-0" @click="editItem(props.item)">
+                              <v-icon color="teal">edit</v-icon>
+                            </v-btn>
+                            <v-btn icon class="mx-0" @click="deleteItem(props.item)">
+                              <v-icon color="pink">delete</v-icon>
+                            </v-btn>
+                          </td>
+
+                          <!-- Message -->
+                          <tr v-if="expanded.includes(props.item)">
+                            <td colspan="6">
+                              <div>
+                                Message:  {{ props.item.message }} 
+                              </div>
+                            </td>
+                          </tr>
+                        </tr>
+                    </template>
+                      
+
+                    <!-- Reset Button -->
+                    <template v-slot:no-data>
+                        <v-btn
+                            round
+                            color="primary"
+                            @click="initialize"
+                        >
+                          Reset
+                        </v-btn>
+                      </template>
+                </v-data-table>
+
+                <!-- Delete Dialog -->
+                <v-dialog ref="deleteDialog" v-model="dialogRef.open" max-width="600px">
+                    <v-card>
+                      <v-card-title class="headline">{{ dialogRef.title }}</v-card-title>
+                      <v-card-text>{{ dialogRef.text }}</v-card-text>
+
+                      <!-- Delete Dialog Buttons -->
+                      <v-card-actions>
+                        <v-btn color="primary" dark @click="dialogRef.open = false">Cancel</v-btn>
+                        <v-btn color="red" dark @click="dialogRef.onConfirm()">Delete</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                
+
+                <!-- Dialog -->
+                <v-layout row justify-center>
+                    <v-dialog v-model="dialog" persistent max-width="600px">
+                        
+                        <!-- Add User button -->
+                        <template v-slot:activator="{ on }">
+                            <v-btn color="blue-grey" v-on="on" fab class="mx-2">
+                                <v-icon color="white">
+                                    mdi-plus
+                                </v-icon>
+                            </v-btn>
+                        </template>
+
+                        <v-spacer></v-spacer>
+
+                        <!-- Form Title -->
+                        <v-card>
+                            <v-card-title>
+                                <span class="headline">{{ formTitle }}</span>
+                            </v-card-title>
+                            <v-card-text>
+                                <v-container grid-list-md>
+                                    <v-form ref="form" v-model="valid">
+                                        <v-layout wrap>
+                                        
+                                            <!-- First Name -->
+                                            <v-flex xs12 sm6 md4>
+                                            <v-text-field label="First Name*" required v-model="editedItem.firstname" 
+                                            :rules="[v => !!v || 'field is required']"></v-text-field>
+                                            </v-flex>
+                                            
+                                            <!-- Last Name -->
+                                            <v-flex xs12 sm6 md4>
+                                            <v-text-field label="Last Name*" required v-model="editedItem.lastname" 
+                                            :rules="[v => !!v || 'field is required']"></v-text-field>
+                                            </v-flex>
+                                            
+                                            <!-- Email -->
+                                            <v-flex xs12>
+                                                <v-text-field label="Email*" required="" v-model="editedItem.email" :rules="[
+                                                    v => !!v || 'E-mail is required',
+                                                    v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+                                                    ]">                                
+                                                </v-text-field>
+                                            </v-flex>
+                                            
+                                            <!-- Age -->
+                                            <v-flex xs12 sm6>
+                                                <v-select 
+                                                    :items="['0-17', '18-29', '30-54', '54+']" 
+                                                    label="Age*" required v-model="editedItem.age" 
+                                                    :rules="[v => !!v || 'field is required']">
+                                                </v-select>
+                                            </v-flex>
+
+                                            <!-- message -->
+                                            <v-flex xs12  >
+                                                <v-textarea label="Message" required v-model="editedItem.message" placeholder="Write Somthing..." 
+                                                ></v-textarea>
+                                            </v-flex>
+                                            
+                                        </v-layout>
+                                    </v-form>
+                                </v-container>
+                                <small>*indicates required field</small>
+                            </v-card-text>
+                            <v-spacer></v-spacer>
+                        
+                            <!-- Close & Save buttons -->
+                            <v-card-actions>
+                                <v-btn color="blue darken-1" flat @click="close">Close</v-btn>
+                                <v-btn color="blue darken-1" flat @click="saveData" >Save</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </v-layout>
+            </v-container>
+
+            <!-- Footer -->
+            <v-footer padless align="center">
+                <v-card
+                    flat
+                    tile
+                    width="100%"
+                    class="blue-grey darken-1"
+                >
+                    <v-card-text>
+                        <v-btn
+                        v-for="icon in icons"
+                        :key="icon"
+                        class="mx-4 white--text"
+                        icon
+                        >
+                            <v-icon size="24px">
+                                {{ icon }}
+                            </v-icon>
+                        </v-btn>
+                    </v-card-text>
+                        
+                    <v-divider></v-divider>
+
+                    <v-card-text class="white--text">
+                        {{ new Date().getFullYear() }} - <strong>Majd Almotaem</strong>
+                    </v-card-text>
+                </v-card>
+            </v-footer>
+        </v-app>
+    </div>
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@1.x/dist/vuetify.js"></script>
+    <script src="/vuetify/js/dataTable.js"></script>
+
+    
+
+</body>
+</html>

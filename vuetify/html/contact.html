@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@1.x/dist/vuetify.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/vuetify/css/contact.css">  
+    <title>Contact</title>
+</head>
+<body>
+  <!-- toolbar -->
+  <div id="app">
+    <v-app>
+
+      <!-- Header -->
+      <v-toolbar class="blue-grey darken-1" >
+            
+        <!-- Title -->
+        <v-toolbar-title class=" white--text">Majd Almotaem</v-toolbar-title>
+        
+        <v-spacer></v-spacer>
+        
+        <!-- buttons toolbar -->
+        <v-btn round class="ml-1 white">
+          <a href="/vuetify/html/homepage.html" style="text-decoration: none;"
+          class="black--text">Home</a>
+        </v-btn>
+        <v-btn round class="ml-1 white">
+          <a href="/vuetify/html/services.html" style="text-decoration: none;"
+          class="black--text">Services</a>
+        </v-btn>
+        <v-btn round class="ml-1 white">
+          <a href="/vuetify/html/table.html" style="text-decoration: none;"
+          class="black--text">Costomers</a>
+        </v-btn>
+        <v-btn round class="ml-1 white">
+          <a href="/vuetify/html/contact.html" style="text-decoration: none;"
+          class="black--text">Contact</a>
+        </v-btn>
+      </v-toolbar>
+
+
+      <v-container fluid class="grey lighten-2">
+        <div class="container">
+          <div class="form-container">
+            <div class="left-container">
+              <img src="/img/pngegg.png" alt="" >
+              <div class="left-inner-container">
+                <h2>Get in touch</h2>
+                <p>Whether you have a question, want to start a project or simply want to connect.</p>
+                <p>Feel free to send me a message in the contact form</p>
+              </div>
+            </div>
+            <div class="right-container">
+              <div class="right-inner-container">
+                <form action="#">
+                  <h2>Contact</h2> <br>
+                  <div class="social-container">
+                    <a href="#" class="social"><i><v-icon>mdi-email</v-icon></i></a>
+                    <a href="#" class="social"><i><v-icon>mdi-phone</v-icon></i></a>
+                    <a href="#" class="social"><i><v-icon>mdi-github</v-icon></i></a>
+                  </div>
+                  <input type="text" placeholder="Name *" />
+                  <input type="email" placeholder="Email *" />
+                  <input type="text" placeholder="Company" />
+                  <input type="phone" placeholder="Phone" />
+                  <textarea rows="4" placeholder="Message"></textarea>
+                  <button>Submit</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </v-container>
+      
+
+
+
+
+
+     <!-- Footer -->
+      <v-footer padless align="center">
+          <v-card
+            flat
+            tile
+            width="100%"
+            class="blue-grey darken-1"
+          >
+            <v-card-text>
+                <v-btn
+                v-for="icon in icons"
+                :key="icon"
+                class="mx-4 white--text"
+                icon
+                >
+                  <v-icon size="24px">
+                      {{ icon }}
+                  </v-icon>
+                </v-btn>
+            </v-card-text>
+                
+            <v-divider></v-divider>
+
+            <v-card-text class="white--text">
+                {{ new Date().getFullYear() }} - <strong>Majd Almotaem</strong>
+            </v-card-text>
+          </v-card>
+      </v-footer>
+    </v-app>
+</div>
+      
+    
+
+
+
+    
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@1.x/dist/vuetify.js"></script>
+  <script src="/vuetify/js/contact.js"></script>
+  
+</body>
+</html>
